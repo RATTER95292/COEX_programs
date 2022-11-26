@@ -23,11 +23,18 @@ https://clover.coex.tech/ru/assemble_4_2_ws.html
 
 Начиная с версии v0.22, образ основан на ROS Noetic и использует Python 3. Если вы хотите использовать ROS Melodic и Python 2, используйте версию v0.21.2.
 
-1. Скачайте последний стабильный релиз образа — v0.22.
-2. Скачайте и установите программу для записи образов Etcher (доступна для Windows/Linux/macOS).
-3. Установите MicroSD-карту в компьютер (используйте адаптер при необходимости).
-4. Запишите скачанный образ на карту, используя Etcher.
-5.
+<ol>
+<li> Скачайте последний стабильный релиз образа — <a href = "https://github.com/CopterExpress/clover/releases/download/v0.22/clover_v0.22.img.zip"> v0.22.</a> </li>
+<li> Скачайте и установите <a href = "https://github.com/CopterExpress/clover/releases/download/v0.22/clover_v0.22.img.zip"> программу для записи образов Etcher </a> (доступна для Windows/Linux/macOS). </li>
+<li> Установите MicroSD-карту в компьютер (используйте адаптер при необходимости). </li>
+<li> Запишите скачанный образ на карту, используя Etcher. </li>
+<li> Установите карту в Raspberry Pi. </li>
+</ol>
+
+<img src = "https://clover.coex.tech/assets/etcher.png"/>
+
+После записи образа на SD-карту, вы можете подключаться к <a href = "https://clover.coex.tech/ru/wifi.html" >Клеверу по Wi-Fi </a>, использовать <a href ="https://clover.coex.tech/ru/gcs_bridge.html">беспроводное соединение в QGroundControl</a>, получать доступ по SSH и использовать остальные функции. При необходимости узнать версию записанного на карту образа используйте <a href = "https://clover.coex.tech/ru/selfcheck.html" > утилиту selfcheck.py</a>.
+
 
 Инструкции по работе с квадракоптерам компании COEX:
 1. https://lahmeneffa.gitbook.io/docs-tkuik/
