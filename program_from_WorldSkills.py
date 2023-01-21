@@ -50,10 +50,7 @@ def rec(img):
     d2 = d > 0.25
     d2 = (d2*255).astype("uint8")
     d3 = d2.copy()
-    # d3 = cv2.erode(d2, np.ones((3, 3), dtype="uint8"))
     d3 = cv2.dilate(d3, np.ones((6, 6), dtype="uint8"))
-    # d3 = cv2.medianBlur(d3, 5)
-    # d3 = cv2.erode(d3, np.ones((5, 5), dtype="uint8"))
 
     imshow("hsv", hsv)
     imshow("d", (d*255).astype("uint8"))
@@ -67,7 +64,7 @@ def rec(img):
         return "", deb
     
     
-    # contour 
+    # Рисование контуров 
     cnts = sorted([cnt for cnt in cnts if cv2.contourArea(cnt) > 2700], key=cv2.contourArea, reverse=True)
     cv2.drawContours(deb, cnts, -1, (0,255,0), 3)
     if len(cnts) == 0:
@@ -89,7 +86,7 @@ def rec(img):
         cv2.circle(deb, (b[0], b[1]), 10, (0, 255.0*(i)/4.0, 0), -1)
 
 
-    # croping 
+    # обрезка
 
     pts2 = np.float32([[0, 50], [0, 0], [50, 0], [50, 50]])
     # print(box)
@@ -98,19 +95,15 @@ def rec(img):
     croped = cv2.warpPerspective(img, M, (50, 50))
     imshow("croped", croped)
 
-    # classifying 
+    # класификация 
     croped_hsv = cv2.cvtColor(croped, cv2.COLOR_BGR2HSV)
     chsv_d = croped_hsv.astype("float")/255.0
     cd = (chsv_d[:, :, 1] > 0.2)*(chsv_d[:, :, 2] > 0.2)
 
     red_t = ((chsv_d[:, :, 0] > 0.5)*(chsv_d[:, :, 0] < 1))*cd
     rr = (red_t < 0.5)*chsv_d[:, :, 0]*cd
-    # green = ((chsv_d[:, :, 0] > 0.44)*(chsv_d[:, :, 0] < 0.45))*cd
-    # blue = ((chsv_d[:, :, 0] > 0.45)*(chsv_d[:, :, 0] < 0.5))*cd
     imshow("cd", (cd*255*chsv_d[:, :, 0]).astype("uint8"))
     imshow("rr", (rr*255).astype("uint8"))
-    # imshow("green", (green*255).astype("uint8"))
-    # imshow("blue", (blue*255).astype("uint8"))
     red = np.count_nonzero(red_t) > 100
     green = np.count_nonzero((rr > 0.36)*(rr< 0.4)) > 100
     blue = np.count_nonzero((rr > 0.405)*(rr< 0.5)) > 100
@@ -134,16 +127,12 @@ def rec(img):
         ret = "George"
     if flag == (False, False, True):
         ret = "Finland"
-    # red = 
-    # blue = 
-    # green = 
-    
 
     imshow("deb", deb)
     return ret, deb
 
 
-# points coordinates
+# Создание точек полета
 Z_POINTS = 1.43
 
 points = {
@@ -182,10 +171,10 @@ def image_callback(data):
     prev_t = t
 
 
-# sub to /main_camera/image_raw_throttled
+# Созание топика
 image_sub = rospy.Subscriber('main_camera/image_raw_throttled', Image, image_callback)
 
-# navigate to point and wait
+# подлет к точке и ожидание
 def navigate_wait(x=0, y=0, z=0, yaw=float('nan'), speed=0.5, frame_id='', auto_arm=False, tolerance=0.2):
     navigate(x=x, y=y, z=z, yaw=yaw, speed=speed, frame_id=frame_id, auto_arm=auto_arm)
 
@@ -199,7 +188,7 @@ def navigate_wait(x=0, y=0, z=0, yaw=float('nan'), speed=0.5, frame_id='', auto_
 
 print("points", points)
 
-# takeoff
+# Взлет
 navigate(z=1, x=0, y=0, yaw=float('nan'), frame_id="body", speed=1, auto_arm=True)
 rospy.sleep(3)
 navigate(x=0, y=0, z=1, yaw=float('nan'), frame_id="aruco_map", speed=0.5)
@@ -213,10 +202,10 @@ def navigate_to_pnt(name):
     print("at", name)
 
 
-# fly to points
+# Полет п точкам
 rep = []
 
-for i, f in enumerate(["p1", "p2", "p3"]):
+for i,f in enumerate(["p1", "p2", "p3"]):
     set_effect(r=0, g=0, b=0)
     navigate_to_pnt(f)
     rospy.sleep(2)
@@ -237,10 +226,10 @@ for i, f in enumerate(["p1", "p2", "p3"]):
     set_effect(r=0, g=0, b=0)
 
 
-# write report 
+# Записать все в отчет
 open("report_fly_5.txt", "w").write("\n".join(rep))
 
-# land
+# Посадка
 navigate_to_pnt("land")
 land()
 rospy.sleep(3)
